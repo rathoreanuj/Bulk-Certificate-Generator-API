@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  certforge:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: certforge_app
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - LOG_LEVEL=INFO
+      - DATABASE_URL=sqlite:///./certificates.db
+      - CERTIFICATES_DIR=./generated_certificates
+    volumes:
+      - cert_storage:/app/generated_certificates
+      - db_storage:/app/database_data
+    restart: unless-stopped
+
+volumes:
+  cert_storage:
+    name: certforge_certificates_data
+  db_storage:
+    name: certforge_database_data
